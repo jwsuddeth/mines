@@ -58,10 +58,7 @@ private:
     
 public:
     
-    GameBoard(){
-        
-        
-    }
+    GameBoard(){}
     
     void showHint()
     {
@@ -136,6 +133,25 @@ public:
         }
     }
     
+    
+    bool checkForWinner()
+    {
+        // for each cell if we found one that is not stepped on but is also not a mine
+        // then the game is not over.
+        for (int i=0; i<ROWS; i++)
+        {
+            for (int j=0; j<COLS; j++)
+            {
+                if (!cells[i][j].getStepped() && !cells[i][j].getIsMine())
+                {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+
     bool step(int x, int y)
     {
         // step on it
@@ -155,6 +171,11 @@ public:
         
         return false;
     }
+
+    
+private:
+    
+    
     
     void reveal(int row, int col)
     {
@@ -242,26 +263,7 @@ public:
             }
         }
     }
-    
-    bool checkForWinner()
-    {
-        // for each cell if we found one that is not stepped on but is also not a mine
-        // then the game is not over.
-        for (int i=0; i<ROWS; i++)
-        {
-            for (int j=0; j<COLS; j++)
-            {
-                if (!cells[i][j].getStepped() && !cells[i][j].getIsMine())
-                {
-                    return false;
-                }
-            }
-        }
-        
-        return true;
-    }
-    
-private:
+
     
     void countMines(int row, int col)
     {
@@ -296,6 +298,16 @@ private:
 
 int main(int argc, const char * argv[]) {
  
+    bool doShowHints = false;
+    
+    for (int i=0; i<argc; i++)
+    {
+        if (strcmp(argv[i], "-hint"))
+        {
+            doShowHints = true;
+        }
+    }
+    
     GameBoard board;
  
     // seed the random number generator
@@ -309,7 +321,10 @@ int main(int argc, const char * argv[]) {
     {
         int x = 0, y = 0;
     
-        board.showHint();
+        if (doShowHints)
+        {
+            board.showHint();
+        }
         
         board.printBoard();
         
